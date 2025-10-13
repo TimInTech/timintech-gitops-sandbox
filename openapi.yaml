@@ -5,6 +5,7 @@ info:
   description: APIs für Audit-Plan, CI/Security/Release-Pläne und Compliance-Reports (read-first, apply optional).
 servers:
   - url: https://api.timintech.dev/gitops/v1
+  - url: http://localhost:8090/gitops/v1
 security:
   - ApiKeyAuth: []
 tags:
