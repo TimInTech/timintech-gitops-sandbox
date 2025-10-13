@@ -1,4 +1,4 @@
-from fastapi import FastAPI, Request
+from fastapi import FastAPI, Request, Depends, Header, HTTPException
 from fastapi.responses import JSONResponse
 from pydantic import BaseModel
 from typing import List, Optional
@@ -59,6 +59,17 @@ def health_sub():
     return {"status": "ok", "version": APP_VERSION}
 
 
+def api_key_guard(x_api_key: str | None = Header(default=None)):
+    """Simple header-based API key guard.
+
+    - If env API_KEY is set and does not match header X-API-Key -> 401
+    - If env API_KEY is empty -> allow (no auth required)
+    """
+    expected = os.getenv("API_KEY", "")
+    if expected and x_api_key != expected:
+        raise HTTPException(status_code=401, detail="invalid api key")
+
+
 def make_plan(op: str, req: PlanRequest) -> PlanResponse:
     mode = "APPLY" if req.apply else "DRY-RUN"
     steps: List[str] = [
@@ -85,7 +96,7 @@ def make_plan(op: str, req: PlanRequest) -> PlanResponse:
     response_model=PlanResponse,
     responses={400: {"model": ErrorResponse}, 500: {"model": ErrorResponse}},
 )
-def audit_plan(req: PlanRequest):
+def audit_plan(req: PlanRequest, _=Depends(api_key_guard)):
     return make_plan("audit", req)
 
 
@@ -94,7 +105,7 @@ def audit_plan(req: PlanRequest):
     response_model=PlanResponse,
     responses={400: {"model": ErrorResponse}, 500: {"model": ErrorResponse}},
 )
-def ci_baseline(req: PlanRequest):
+def ci_baseline(req: PlanRequest, _=Depends(api_key_guard)):
     return make_plan("ci-baseline", req)
 
 
@@ -103,7 +114,7 @@ def ci_baseline(req: PlanRequest):
     response_model=PlanResponse,
     responses={400: {"model": ErrorResponse}, 500: {"model": ErrorResponse}},
 )
-def security_enable(req: PlanRequest):
+def security_enable(req: PlanRequest, _=Depends(api_key_guard)):
     return make_plan("security-enable", req)
 
 
@@ -112,7 +123,7 @@ def security_enable(req: PlanRequest):
     response_model=PlanResponse,
     responses={400: {"model": ErrorResponse}, 500: {"model": ErrorResponse}},
 )
-def release_draft(req: PlanRequest):
+def release_draft(req: PlanRequest, _=Depends(api_key_guard)):
     return make_plan("release-draft", req)
 
 
@@ -121,7 +132,7 @@ def release_draft(req: PlanRequest):
     response_model=PlanResponse,
     responses={400: {"model": ErrorResponse}, 500: {"model": ErrorResponse}},
 )
-def policy_report(req: PlanRequest):
+def policy_report(req: PlanRequest, _=Depends(api_key_guard)):
     return make_plan("policy-report", req)
 
 
@@ -130,7 +141,7 @@ def policy_report(req: PlanRequest):
     response_model=PlanResponse,
     responses={400: {"model": ErrorResponse}, 500: {"model": ErrorResponse}},
 )
-def clean_reset_plan(req: PlanRequest):
+def clean_reset_plan(req: PlanRequest, _=Depends(api_key_guard)):
     # bewusst nur Plan, nie direkte Anwendung
     return make_plan("clean-reset-plan", req)
 

@@ -48,6 +48,7 @@ paths:
       tags: [health]
       operationId: getHealth
       summary: Healthcheck
+      security: []
       responses:
         '200':
           description: OK
