@@ -1,0 +1,1 @@
+spectral nicht installiert (npm i -g @stoplight/spectral-cli)

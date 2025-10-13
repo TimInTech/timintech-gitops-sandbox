@@ -1,0 +1,13 @@
+name: Spectral OpenAPI
+on:
+  pull_request:
+  push:
+    branches: [main]
+    paths: ["openapi.yaml", ".spectral.yaml", ".github/workflows/spectral-openapi.yml"]
+jobs:
+  spectral:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - run: npm i -g @stoplight/spectral-cli
+      - run: spectral lint openapi.yaml

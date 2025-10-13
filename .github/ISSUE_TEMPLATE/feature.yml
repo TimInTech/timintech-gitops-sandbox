@@ -1,0 +1,7 @@
+name: Feature
+description: Neue Funktion anfragen
+body:
+  - type: textarea
+    id: nutzen
+    attributes:
+      label: Nutzen

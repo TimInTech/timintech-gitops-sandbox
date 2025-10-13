@@ -1,0 +1,12 @@
+name: Bug
+description: Fehlermeldung
+body:
+  - type: textarea
+    id: beschreibung
+    attributes:
+      label: Beschreibung
+      description: Was ist passiert?
+  - type: textarea
+    id: reproduce
+    attributes:
+      label: Reproduktion

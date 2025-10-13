@@ -7,6 +7,15 @@ servers:
   - url: https://api.timintech.dev/gitops/v1
 security:
   - ApiKeyAuth: []
+tags:
+  - name: health
+    description: Service-Status
+  - name: audit
+  - name: ci
+  - name: security
+  - name: release
+  - name: policy
+  - name: clean-reset
 components:
   securitySchemes:
     ApiKeyAuth:
@@ -27,10 +36,32 @@ components:
         summary: { type: string }
         steps: { type: array, items: { type: string } }
         artifacts: { type: array, items: { type: string } }
+    ErrorResponse:
+      type: object
+      properties:
+        error: { type: string }
+        detail: { type: string }
 paths:
+  /health:
+    get:
+      tags: [health]
+      operationId: getHealth
+      summary: Healthcheck
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status: { type: string }
+                  version: { type: string }
+
   /audit/plan:
     post:
-      operationId: auditPlan
+      tags: [audit]
+      operationId: postAuditPlan
       summary: Repo-Audit planen oder anwenden
       requestBody:
         required: true
@@ -41,9 +72,13 @@ paths:
           description: OK
           content:
             application/json: { schema: { $ref: '#/components/schemas/PlanResponse' } }
+        '400': { description: Bad Request, content: { application/json: { schema: { $ref: '#/components/schemas/ErrorResponse' }}}}
+        '500': { description: Server Error, content: { application/json: { schema: { $ref: '#/components/schemas/ErrorResponse' }}}}
+
   /ci/baseline:
     post:
-      operationId: ciBaseline
+      tags: [ci]
+      operationId: postCiBaseline
       summary: CI-Basis (Lint/Matrix/Cache) planen oder anwenden
       requestBody:
         required: true
@@ -51,9 +86,13 @@ paths:
           application/json: { schema: { $ref: '#/components/schemas/PlanRequest' } }
       responses:
         '200': { description: OK, content: { application/json: { schema: { $ref: '#/components/schemas/PlanResponse' }}}}
+        '400': { description: Bad Request, content: { application/json: { schema: { $ref: '#/components/schemas/ErrorResponse' }}}}
+        '500': { description: Server Error, content: { application/json: { schema: { $ref: '#/components/schemas/ErrorResponse' }}}}
+
   /security/enable:
     post:
-      operationId: securityEnable
+      tags: [security]
+      operationId: postSecurityEnable
       summary: CodeQL, Secret-Scanning, SBOM/CVE-Scan planen oder anwenden
       requestBody:
         required: true
@@ -61,9 +100,13 @@ paths:
           application/json: { schema: { $ref: '#/components/schemas/PlanRequest' } }
       responses:
         '200': { description: OK, content: { application/json: { schema: { $ref: '#/components/schemas/PlanResponse' }}}}
+        '400': { description: Bad Request, content: { application/json: { schema: { $ref: '#/components/schemas/ErrorResponse' }}}}
+        '500': { description: Server Error, content: { application/json: { schema: { $ref: '#/components/schemas/ErrorResponse' }}}}
+
   /release/draft:
     post:
-      operationId: releaseDraft
+      tags: [release]
+      operationId: postReleaseDraft
       summary: Release-Drafter/Tags/Changelog planen oder anwenden
       requestBody:
         required: true
@@ -71,9 +114,13 @@ paths:
           application/json: { schema: { $ref: '#/components/schemas/PlanRequest' } }
       responses:
         '200': { description: OK, content: { application/json: { schema: { $ref: '#/components/schemas/PlanResponse' }}}}
+        '400': { description: Bad Request, content: { application/json: { schema: { $ref: '#/components/schemas/ErrorResponse' }}}}
+        '500': { description: Server Error, content: { application/json: { schema: { $ref: '#/components/schemas/ErrorResponse' }}}}
+
   /policy/report:
     post:
-      operationId: policyReport
+      tags: [policy]
+      operationId: postPolicyReport
       summary: Compliance-Report erzeugen
       requestBody:
         required: true
@@ -81,9 +128,13 @@ paths:
           application/json: { schema: { $ref: '#/components/schemas/PlanRequest' } }
       responses:
         '200': { description: OK, content: { application/json: { schema: { $ref: '#/components/schemas/PlanResponse' }}}}
+        '400': { description: Bad Request, content: { application/json: { schema: { $ref: '#/components/schemas/ErrorResponse' }}}}
+        '500': { description: Server Error, content: { application/json: { schema: { $ref: '#/components/schemas/ErrorResponse' }}}}
+
   /clean-reset/plan:
     post:
-      operationId: cleanResetPlan
+      tags: [clean-reset]
+      operationId: postCleanResetPlan
       summary: Verlustarmen Clean-Reset nur planen (nie direkt anwenden)
       requestBody:
         required: true
@@ -91,3 +142,5 @@ paths:
           application/json: { schema: { $ref: '#/components/schemas/PlanRequest' } }
       responses:
         '200': { description: OK, content: { application/json: { schema: { $ref: '#/components/schemas/PlanResponse' }}}}
+        '400': { description: Bad Request, content: { application/json: { schema: { $ref: '#/components/schemas/ErrorResponse' }}}}
+        '500': { description: Server Error, content: { application/json: { schema: { $ref: '#/components/schemas/ErrorResponse' }}}}

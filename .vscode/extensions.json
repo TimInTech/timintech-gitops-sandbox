@@ -3,6 +3,8 @@
     "redhat.vscode-yaml",
     "stoplight.spectral",
     "GitHub.vscode-github-actions",
+    "charliermarsh.ruff",
+    "ms-python.python",
     "editorconfig.editorconfig"
   ]
 }
