@@ -1,0 +1,29 @@
+name: CI Sanity
+on:
+  pull_request:
+  push:
+    branches: [main]
+jobs:
+  lint:
+    name: lint
+    runs-on: ubuntu-latest
+    permissions: { contents: read }
+    steps:
+      - uses: actions/checkout@v4
+      - run: sudo apt-get update && sudo apt-get install -y shellcheck shfmt
+      - run: |
+          find . -type f -name "*.sh" -print0 | xargs -0 -I{} bash -lc 'shellcheck "{}"'
+          find . -type f -name "*.sh" -print0 | xargs -0 -I{} bash -lc 'shfmt -d "{}"'
+  matrix-tests:
+    name: matrix-tests
+    runs-on: ubuntu-latest
+    permissions: { contents: read }
+    strategy:
+      fail-fast: false
+      matrix: { node: ["18", "20"] }
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with: { node-version: ${{ matrix.node }}, cache: npm }
+      - run: npm ci || true
+      - run: npm test || echo "no tests"

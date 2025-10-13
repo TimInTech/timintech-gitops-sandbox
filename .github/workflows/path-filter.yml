@@ -1,0 +1,15 @@
+name: Path Filter
+on: [push, pull_request]
+jobs:
+  filter:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: dorny/paths-filter@v3
+        id: changes
+        with:
+          filters: |
+            scripts:
+              - 'scripts/**'
+            docs:
+              - 'docs/**'

@@ -1,0 +1,11 @@
+name: Link Check
+on: [push, pull_request]
+jobs:
+  lychee:
+    runs-on: ubuntu-latest
+    permissions: { contents: read }
+    steps:
+      - uses: actions/checkout@v4
+      - uses: lycheeverse/lychee-action@v1
+        with:
+          args: --no-progress --verbose **/*.md

@@ -1,0 +1,93 @@
+openapi: 3.1.0
+info:
+  title: TimInTech GitOps API
+  version: 1.0.0
+  description: APIs für Audit-Plan, CI/Security/Release-Pläne und Compliance-Reports (read-first, apply optional).
+servers:
+  - url: https://api.timintech.dev/gitops/v1
+security:
+  - ApiKeyAuth: []
+components:
+  securitySchemes:
+    ApiKeyAuth:
+      type: apiKey
+      in: header
+      name: X-API-Key
+  schemas:
+    PlanRequest:
+      type: object
+      required: [owner, repo]
+      properties:
+        owner: { type: string }
+        repo: { type: string }
+        apply: { type: boolean, default: false }
+    PlanResponse:
+      type: object
+      properties:
+        summary: { type: string }
+        steps: { type: array, items: { type: string } }
+        artifacts: { type: array, items: { type: string } }
+paths:
+  /audit/plan:
+    post:
+      operationId: auditPlan
+      summary: Repo-Audit planen oder anwenden
+      requestBody:
+        required: true
+        content:
+          application/json: { schema: { $ref: '#/components/schemas/PlanRequest' } }
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json: { schema: { $ref: '#/components/schemas/PlanResponse' } }
+  /ci/baseline:
+    post:
+      operationId: ciBaseline
+      summary: CI-Basis (Lint/Matrix/Cache) planen oder anwenden
+      requestBody:
+        required: true
+        content:
+          application/json: { schema: { $ref: '#/components/schemas/PlanRequest' } }
+      responses:
+        '200': { description: OK, content: { application/json: { schema: { $ref: '#/components/schemas/PlanResponse' }}}}
+  /security/enable:
+    post:
+      operationId: securityEnable
+      summary: CodeQL, Secret-Scanning, SBOM/CVE-Scan planen oder anwenden
+      requestBody:
+        required: true
+        content:
+          application/json: { schema: { $ref: '#/components/schemas/PlanRequest' } }
+      responses:
+        '200': { description: OK, content: { application/json: { schema: { $ref: '#/components/schemas/PlanResponse' }}}}
+  /release/draft:
+    post:
+      operationId: releaseDraft
+      summary: Release-Drafter/Tags/Changelog planen oder anwenden
+      requestBody:
+        required: true
+        content:
+          application/json: { schema: { $ref: '#/components/schemas/PlanRequest' } }
+      responses:
+        '200': { description: OK, content: { application/json: { schema: { $ref: '#/components/schemas/PlanResponse' }}}}
+  /policy/report:
+    post:
+      operationId: policyReport
+      summary: Compliance-Report erzeugen
+      requestBody:
+        required: true
+        content:
+          application/json: { schema: { $ref: '#/components/schemas/PlanRequest' } }
+      responses:
+        '200': { description: OK, content: { application/json: { schema: { $ref: '#/components/schemas/PlanResponse' }}}}
+  /clean-reset/plan:
+    post:
+      operationId: cleanResetPlan
+      summary: Verlustarmen Clean-Reset nur planen (nie direkt anwenden)
+      requestBody:
+        required: true
+        content:
+          application/json: { schema: { $ref: '#/components/schemas/PlanRequest' } }
+      responses:
+        '200': { description: OK, content: { application/json: { schema: { $ref: '#/components/schemas/PlanResponse' }}}}

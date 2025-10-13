@@ -1,0 +1,29 @@
+repository:
+  name: PLACEHOLDER
+  default_branch: main
+  allow_squash_merge: true
+  allow_merge_commit: false
+  allow_rebase_merge: false
+  delete_branch_on_merge: true
+  web_commit_signoff_required: true
+  has_issues: true
+  has_projects: false
+  has_wiki: false
+
+branches:
+  - name: main
+    protection:
+      required_linear_history: true
+      enforce_admins: true
+      required_status_checks:
+        strict: true
+        contexts:
+          - CI Sanity / lint
+          - CI Sanity / matrix-tests
+          - CodeQL
+          - SBOM & Vulnerability Scan
+          - Link Check
+      required_pull_request_reviews:
+        required_approving_review_count: 1
+        require_code_owner_reviews: true
+      restrictions: null

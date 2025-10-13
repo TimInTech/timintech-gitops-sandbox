@@ -1,0 +1,8 @@
+{
+  "recommendations": [
+    "redhat.vscode-yaml",
+    "stoplight.spectral",
+    "GitHub.vscode-github-actions",
+    "editorconfig.editorconfig"
+  ]
+}

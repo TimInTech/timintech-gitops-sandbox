@@ -1,0 +1,7 @@
+extends: spectral:recommended
+rules:
+  operation-operationId: warn
+  operation-description: warn
+  info-contact: off
+  servers-no-trailing-slash: error
+  openapi-tags: off

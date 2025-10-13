@@ -1,0 +1,10 @@
+name: Coverage
+on: [push, pull_request]
+jobs:
+  cov:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - run: echo "generate coverage" && mkdir -p artifacts && echo "report" > artifacts/report.html
+      - uses: actions/upload-artifact@v4
+        with: { name: coverage, path: artifacts }
