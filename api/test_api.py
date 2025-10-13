@@ -9,6 +9,11 @@ def test_health():
     assert r.status_code == 200
     assert r.json().get("status") == "ok"
 
+def test_health_mounted():
+    r = client.get("/gitops/v1/health")
+    assert r.status_code == 200
+    assert r.json().get("status") == "ok"
+
 
 def test_audit_plan():
     payload = {"owner": "TimInTech", "repo": "demo", "apply": False}

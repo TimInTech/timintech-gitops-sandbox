@@ -54,6 +54,11 @@ def health():
     return {"status": "ok", "version": APP_VERSION}
 
 
+@api.get("/health")
+def health_sub():
+    return {"status": "ok", "version": APP_VERSION}
+
+
 def make_plan(op: str, req: PlanRequest) -> PlanResponse:
     mode = "APPLY" if req.apply else "DRY-RUN"
     steps: List[str] = [

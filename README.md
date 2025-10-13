@@ -1,5 +1,7 @@
 # TimInTech GitOps – Schnellstart
 
+Siehe [/prompts/INDEX.md](prompts/INDEX.md) für das vollständige Prompt Pack.
+
 Dieser Repo enthält Systemprompt, OpenAPI und konservativ gehärtete Workflows, um GitHub-Repos deterministisch zu auditieren und zu härten.
 
 ## 1) Test-Repo anlegen und YAMLs ausrollen
